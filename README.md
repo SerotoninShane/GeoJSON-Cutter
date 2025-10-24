@@ -29,6 +29,8 @@ You need to create an `input.geojson` file in the same folder as the script with
 
 [geojson.io](http://geojson.io) is a great reasource to reference.
 
+![Example Input](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-input.png?raw=true)
+
 - **First feature**: Your main polygon (the base shape)
 - **Subsequent features**: All polygons you want to subtract as holes
 
@@ -74,6 +76,10 @@ After running the script:
 3. Verify the polygon looks correct with holes properly cut out
 4. Click **Save** → **GeoJSON** to download the finalized version
 5. This finalized file is now ready to upload to eCanvasser
+
+
+![Example Output](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-output.png?raw=true)
+
 
 ## Troubleshooting
 
