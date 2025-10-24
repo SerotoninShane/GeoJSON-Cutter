@@ -15,8 +15,10 @@ This is particularly useful when you need to exclude certain areas from a larger
 
 Go to [Node.js](https://nodejs.org/en/download)
 - Install Node.js on your system. When finished, verify: `node -v` & `npm -v`. Both must print version numbers.
+
 Go to [GeoJSON-Polygon-Difference-Clipper](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper) 
 - Click the green Code button → Download ZIP → “Extract All” → Take Interal Folder & Move It To Your Desktop
+
 Open the folder in File Explorer
 - Click in the address bar → type: `cmd` → press Enter & type `npm install` → press Enter (This installs everything from package.json (@turf/turf, @turf/difference, etc).)
 
@@ -56,8 +58,10 @@ You need to create an `input.geojson` file in the same folder as the script with
 
 Run the Tool
 - Execute: `node index.js` in select folder's cmd line
+
 Expected output
 - Done. Output saved as `output.geojson`
+
 You now have `output.geojson` in the same folder.
 
 ## Post-Processing for eCanvasser
