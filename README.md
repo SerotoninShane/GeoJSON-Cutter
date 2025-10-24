@@ -16,7 +16,7 @@ This is particularly useful when you need to exclude certain areas from a larger
 Go to [Node.js](https://nodejs.org/en/download)
 - Install Node.js on your system. When finished, verify: `node -v` & `npm -v`. Both must print version numbers.
 
-Go to [GeoJSON-Polygon-Difference-Clipper](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper) 
+Go to [GeoJSON-Polygon-Difference-Clipper](https://github.com/SerotoninShane/GeoJSON-Cutter)
 - Click the green Code button → Download ZIP → “Extract All” → Take Interal Folder & Move It To Your Desktop
 
 Open the folder in File Explorer
@@ -58,7 +58,7 @@ You need to create an `input.geojson` file in the same folder as the script with
 **Important**: The order matters! The first polygon is your main shape, all others will be cut out from it.
 
 ## EXAMPLE INPUT IMAGE
-![Example Input](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-input.png)
+![Example Input](https://github.com/SerotoninShane/GeoJSON-Cutter/blob/main/example-input.png)
 
 Run the Tool
 - Execute: `node index.js` in select folder's cmd line
@@ -79,7 +79,7 @@ After running the script:
 5. This finalized file is now ready to upload to eCanvasser
 
 ## EXAMPLE OUTPUT IMAGE
-![Example Output](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-output.png?raw=true)
+![Example Output](https://github.com/SerotoninShane/GeoJSON-Cutter/blob/main/example-output.png?raw=true)
 
 
 ## Troubleshooting
