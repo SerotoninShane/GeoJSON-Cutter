@@ -29,10 +29,6 @@ You need to create an `input.geojson` file in the same folder as the script with
 
 [geojson.io](http://geojson.io) is a great reasource to reference.
 
-## EXAMPLE INPUT IMAGE
-![Example Input](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-input.png)
-
-
 - **First feature**: Your main polygon (the base shape)
 - **Subsequent features**: All polygons you want to subtract as holes
 
@@ -60,6 +56,9 @@ You need to create an `input.geojson` file in the same folder as the script with
 ```
 
 **Important**: The order matters! The first polygon is your main shape, all others will be cut out from it.
+
+## EXAMPLE INPUT IMAGE
+![Example Input](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-input.png)
 
 Run the Tool
 - Execute: `node index.js` in select folder's cmd line
