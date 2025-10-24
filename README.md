@@ -29,6 +29,7 @@ You need to create an `input.geojson` file in the same folder as the script with
 
 [geojson.io](http://geojson.io) is a great reasource to reference.
 
+## EXAMPLE INPUT IMAGE
 ![Example Input](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-input.png?raw=true)
 
 - **First feature**: Your main polygon (the base shape)
@@ -77,7 +78,7 @@ After running the script:
 4. Click **Save** → **GeoJSON** to download the finalized version
 5. This finalized file is now ready to upload to eCanvasser
 
-
+## EXAMPLE OUTPUT IMAGE
 ![Example Output](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper/blob/main/example-output.png?raw=true)
 
 
