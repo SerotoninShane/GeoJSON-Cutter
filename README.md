@@ -11,26 +11,20 @@ The script takes a GeoJSON file containing multiple polygon features and:
 
 This is particularly useful when you need to exclude certain areas from a larger boundary (e.g., excluding parks from a canvassing district).
 
-## Prerequisites
+## Run From Scratch (No Git, No VSC Needed)
 
-- Node.js installed on your system (version 14 or higher recommended)
-- Basic familiarity with command line/terminal
-
-## Installation
-
-1. Navigate to the script directory:
-```bash
-cd path/to/script/folder
-```
-
-2. Install required dependencies:
-```bash
-npm install @turf/turf @turf/difference
-```
+Go to [Node.js](https://nodejs.org/en/download)
+- Install Node.js on your system. When finished, verify: `node -v` & `npm -v`. Both must print version numbers.
+Go to [GeoJSON-Polygon-Difference-Clipper](https://github.com/SerotoninShane/GeoJSON-Polygon-Difference-Clipper) 
+- Click the green Code button → Download ZIP → “Extract All” → Take Interal Folder & Move It To Your Desktop
+Open the folder in File Explorer
+- Click in the address bar → type: `cmd` → press Enter & type `npm install` → press Enter (This installs everything from package.json (@turf/turf, @turf/difference, etc).)
 
 ## Input File Requirements
 
 You need to create an `input.geojson` file in the same folder as the script with the following structure:
+
+[geojson.io](http://geojson.io) is a great reasource to reference.
 
 - **First feature**: Your main polygon (the base shape)
 - **Subsequent features**: All polygons you want to subtract as holes
@@ -60,21 +54,11 @@ You need to create an `input.geojson` file in the same folder as the script with
 
 **Important**: The order matters! The first polygon is your main shape, all others will be cut out from it.
 
-## How to Run
-
-1. Place your `input.geojson` file in the same folder as `index.js`
-
-2. Open terminal/command prompt and navigate to the folder:
-```bash
-cd path/to/script/folder
-```
-
-3. Run the script:
-```bash
-node index.js
-```
-
-4. The script will create an `output.geojson` file in the same folder
+Run the Tool
+- Execute: `node index.js` in select folder's cmd line
+Expected output
+- Done. Output saved as `output.geojson`
+You now have `output.geojson` in the same folder.
 
 ## Post-Processing for eCanvasser
 
@@ -101,7 +85,7 @@ After running the script:
 
 **Empty or invalid output**
 - Check that your first polygon in `input.geojson` is the main boundary
-- Verify all polygons are valid GeoJSON Polygon geometry
+- Verify all polygons are valid GeoJSON Polygon geometry copied from [geojson.io's](http://geojson.io) output identically
 
 ## Script Output
 
