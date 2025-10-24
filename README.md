@@ -20,7 +20,8 @@ Go to [GeoJSON-Polygon-Difference-Clipper](https://github.com/SerotoninShane/Geo
 - Click the green Code button → Download ZIP → “Extract All” → Take Interal Folder & Move It To Your Desktop
 
 Open the folder in File Explorer
-- Click in the address bar → type: `cmd` → press Enter & type `npm install` → press Enter (This installs everything from package.json (@turf/turf, @turf/difference, etc).)
+- Click in the address bar → type: `cmd` → press Enter & type `npm install` → press Enter
+- (This installs everything from package.json (@turf/turf, @turf/difference, etc).)
 
 ## Input File Requirements
 
