@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoJSON Hole Cutter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-teal': '#008C99', 
+                        'primary-teal-dark': '#006670',
+                        'primary-teal-light': '#E0F7F9',
+                    }
+                },
+            },
+        }
+    </script>
+    <script src='https://unpkg.com/@turf/turf@7.2.0/turf.min.js'></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-xl bg-white shadow-2xl rounded-xl p-8 space-y-6">
+        
+        <h1 class="text-3xl font-bold text-gray-800 text-center">GeoJSON Hole Cutter</h1>
+        <p class="text-gray-600 text-center">Upload a GeoJSON FeatureCollection. The <strong>first feature</strong> is the main shape; all subsequent features will be cut out as holes.</p>
+
+        <div>
+            <label for="geojsonFileInput" class="block text-sm font-medium text-gray-700 mb-2">Select GeoJSON File (.geojson or .json)</label>
+            <input type="file" id="geojsonFileInput" accept=".geojson,application/json" class="w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2.5 focus:outline-none focus:ring-2 focus:ring-primary-teal">
+        </div>
+
+        <button onclick="processGeoJSON()" id="processButton" class="w-full px-4 py-3 bg-primary-teal text-white font-semibold rounded-lg shadow-md hover:bg-primary-teal-dark transition duration-300 focus:outline-none focus:ring-4 focus:ring-primary-teal focus:ring-opacity-50 disabled:bg-primary-teal-light disabled:text-gray-600">
+            Process GeoJSON
+        </button>
+
+        <div id="status" class="p-3 text-sm rounded-lg bg-primary-teal-light text-primary-teal transition duration-300">
+            Awaiting file upload...
+        </div>
+
+        <div id="downloadArea" class="space-y-4 pt-4 border-t border-gray-200" style="display:none;">
+            <h2 class="text-xl font-semibold text-gray-700">Download Result</h2>
+            
+            <div>
+                <label for="outputFilenameInput" class="block text-sm font-medium text-gray-700 mb-2">Output Filename</label>
+                <input type="text" id="outputFilenameInput" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-primary-teal focus:border-primary-teal">
+            </div>
+
+            <button id="downloadButton" class="w-full px-4 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+                Download Processed File
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let finalGeoJSONResult = null;
+        const fileInput = document.getElementById('geojsonFileInput');
+        const statusDiv = document.getElementById('status');
+        const downloadArea = document.getElementById('downloadArea');
+        const downloadButton = document.getElementById('downloadButton');
+        const filenameInput = document.getElementById('outputFilenameInput');
+        const processButton = document.getElementById('processButton');
+        const DEFAULT_OUTPUT_NAME = 'map-cutout-result.geojson';
+
+        function setStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            downloadArea.style.display = 'none';
+            processButton.disabled = false;
+            
+            statusDiv.className = 'p-3 text-sm rounded-lg transition duration-300';
+            if (type === 'success') {
+                statusDiv.classList.add('bg-green-100', 'text-green-800');
+            } else if (type === 'error') {
+                statusDiv.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                statusDiv.classList.add('bg-primary-teal-light', 'text-primary-teal');
+            }
+        }
+
+        function performDifference(geojson) {
+            const coordsArray = geojson.features.map(f => f.geometry.coordinates);
+
+            if (coordsArray.length < 1) {
+                throw new Error("No features found in the input file.");
+            }
+
+            let mainPolygon = turf.polygon(coordsArray[0]);
+
+            for (let i = 1; i < coordsArray.length; i++) {
+                const holePolygon = turf.polygon(coordsArray[i]);
+                const diff = turf.difference(turf.featureCollection([mainPolygon, holePolygon]));
+
+                if (!diff) {
+                    continue;
+                }
+                mainPolygon = diff;
+            }
+            return mainPolygon;
+        }
+
+        function processGeoJSON() {
+            processButton.disabled = true;
+            setStatus('Processing file, please wait...', 'info');
+            finalGeoJSONResult = null;
+            
+            const file = fileInput.files[0];
+
+            if (!file) {
+                setStatus('Please select a GeoJSON file first.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                try {
+                    const rawData = event.target.result;
+                    const geojson = JSON.parse(rawData);
+
+                    if (geojson.type !== 'FeatureCollection' || !geojson.features || geojson.features.length < 1) {
+                        throw new Error("Invalid GeoJSON format. Expecting a FeatureCollection with at least one feature.");
+                    }
+
+                    const result = performDifference(geojson);
+                    
+                    if (result) {
+                        const initialProperties = geojson.features[0].properties || {};
+                        const finalFeature = turf.feature(result.geometry, initialProperties);
+                        finalGeoJSONResult = turf.featureCollection([finalFeature]);
+                        
+                        setStatus('Successfully processed! Ready to download.', 'success');
+                        downloadArea.style.display = 'block';
+                    } else {
+                        throw new Error("Processing resulted in an empty or invalid geometry.");
+                    }
+
+                } catch (e) {
+                    setStatus('Error during processing: ' + e.message, 'error');
+                }
+            };
+
+            reader.onerror = function(event) {
+                setStatus('Error reading file: ' + reader.error.name, 'error');
+            };
+
+            reader.readAsText(file);
+        }
+
+        downloadButton.addEventListener('click', () => {
+            if (!finalGeoJSONResult) {
+                setStatus('No processed data to download.', 'error');
+                return;
+            }
+
+            const geojsonString = JSON.stringify(finalGeoJSONResult, null, 2);
+            const blob = new Blob([geojsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            let filename = filenameInput.value.trim();
+            // Ensure filename has a .geojson extension
+            if (!filename || (!filename.toLowerCase().endsWith('.geojson') && !filename.toLowerCase().endsWith('.json'))) {
+                filename = (filename.split('.')[0] || DEFAULT_OUTPUT_NAME.split('.')[0]) + '.geojson';
+            }
+            a.download = filename;
+            
+            document.body.appendChild(a);
+            a.click();
+            
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setStatus(`Download initiated for: ${filename}`, 'success');
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                
+                // Set the default output filename to the input filename, ensuring it ends with .geojson
+                let outputName = fileName;
+                if (!outputName.toLowerCase().endsWith('.geojson')) {
+                    const parts = outputName.split('.');
+                    // If it has an extension, replace it. Otherwise, just append .geojson
+                    if (parts.length > 1) {
+                        parts.pop(); 
+                    }
+                    outputName = parts.join('.') + '.geojson';
+                }
+                
+                filenameInput.value = outputName;
+                setStatus(`File selected: ${fileName}`, 'info');
+            } else {
+                filenameInput.value = DEFAULT_OUTPUT_NAME; // Reset if file selection is cleared
+                setStatus('Awaiting file upload...', 'info');
+            }
+        });
+        
+        // Initialize the output filename input on load
+        filenameInput.value = DEFAULT_OUTPUT_NAME;
+    </script>
+</body>
+</html>
